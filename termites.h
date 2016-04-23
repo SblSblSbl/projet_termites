@@ -45,19 +45,89 @@ struct Terrain {
     int nbtermites;
 };
 
+/**
+ * Affihe une erreur qui ne devrait pas arriver
+ * @param str chaîne de caractères représentant l'erreur à afficher
+ */
+void WTF(std::string str);
+
+/**
+ * Renvoie true avec une probabilité donnée
+ * @param p probabilité de renvoyer true
+ * @return true avec une probabilité de p, false sinon
+ */
 bool aleatoire(double p);
+
+/**
+ * Renvoie une direction aléatoire
+ * @return la direction
+ */
 int directionAleatoire();
 
+/**
+ * Crée des coordonnées
+ * @param x abscisse
+ * @param y ordonnée
+ * @return les coordonnées {x, y}
+ */
 Coord creerCoord(int i, int j);
+
+/**
+ * Crée une termite
+ * @param x abscisse de la termite dans son terrain
+ * @param y ordonnée de la termite dans son terrain
+ * @return la termite avec l'indice indice et les coordonnées {x, y} dans son
+ *         terrain
+ */
 Termite creerTermite(int indice, int x, int y);
 
-void place_vide(Place &p);
-bool contient_termite(Place &p);
-bool contient_brindille(Place &p);
+/**
+ * Initialise une place vide
+ * @param &p référence vers la place cible
+ */
+void placeVide(Place &p);
 
+/**
+ * Vérifie si une place contient une termite
+ * @param p place cible
+ * @return true si p contient une termite, false sinon
+ */
+bool contientTermite(Place p);
+
+/**
+ * Vérifie si une place contient une brindille
+ * @param p place cible
+ * @return true si p contient une brindille, false sinon
+ */
+bool contientBrindille(Place p);
+
+
+/**
+ * Renvoie les coordonnées de l'éventuelle place située devant une termite,
+ * sans vérifier si elles sont contenues dans les bornes du terrain
+ * Si la direction de la termite est invalide, renvoie {-1, -1}
+ * @param m termite cible
+ * @return les coordonnées de l'éventuelle place située devant m
+ */
+Coord coordDevant(Termite m);
+
+/**
+ * Initialise un terrain en lui attribuant ses valeurs de début
+ * @param &t référence vers le terrain cible
+ */
 void initialiseTerrain(Terrain &t);
 
+/**
+ * Affiche dans la fenêtre de terminal un symbole correspondant aux paramètres
+ * d'une termite
+ * @param m termite cible
+ */
 void afficheTermite(Termite m);
+
+/**
+ * Affiche le contenu d'un terrain dans la fenêtre de terminal
+ * @param t terrain cible
+ */
 void afficheTerrain(Terrain t);
 
 #endif // TERMITES_H_INCLUDED

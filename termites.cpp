@@ -1,10 +1,15 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 #include <vector>
 
 #include "termites.h"
 using namespace std;
+
+void WTF(string str) {
+    cout << "\x1B[41m \x1B[1mWTF : \x1B[2m" << str << " \x1B[0m";
+};
 
 
 bool aleatoire(double p) {
@@ -31,30 +36,35 @@ Termite creerTermite(int indice, int x, int y) {
     return m;
 }
 
-void place_vide(Place &p) {
-    p.type=PLACE_TYPE_VIDE;
-    p.indtermite=-1;
+void placeVide(Place &p) {
+    p.type = PLACE_TYPE_VIDE;
 }
 
-bool contient_termite(Place &p) {
-    return p.indtermite != -1;
+bool contientTermite(Place &p) {
+    return p.type == PLACE_TYPE_TERMITE;
 }
-bool contient_brindille(Place &p) {
-    p.type = PLACE_TYPE_BRINDILLE;
-    return true;
+bool contientBrindille(Place &p) {
+    return p.type == PLACE_TYPE_BRINDILLE;
 }
-bool est_vide(Place &p){
-return  p.type=PLACE_TYPE_VIDE;
+bool estVide(Place &p) {
+    return p.type == PLACE_TYPE_VIDE;
 }//verifie  par des booleens si une place est vide ou contient un termite ou une brindille
 
-/*Coord coord_devant(Termite t){
-int ind[8][2]={{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1}};
- creerCoord(t.coord.x+ind[t.direction,0],t.coord.y+ind[t.direction,1]);
-}cette fonction genere une erreur que je vois pas du tout
-c'est la fonction pr donner la nouvelle coordonnee apres deplacement.
-aussi commente tes fonctions et lignes de codes particulieres et correspondances selon projet et autres
-pour que je puisse comprendre plus facilement sans te deranger tout le temps
-*/
+Coord coordDevant(Termite t){
+    if (t.direction < 0 || t.direction >= NB_DIRECTIONS) { // pas bien
+        WTF("[coordDevant] Termite mutante");
+        return creerCoord(-1, -1);
+    }
+    int ind[8][2] = {{0,-1}, {-1,1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}};
+    //          haut| haut_droite| droite| ba|s_droite |bas |bas_gauche |gauche |haut_gauche
+    return creerCoord(t.coord.x + ind[t.direction][0], t.coord.y + ind[t.direction][1]);
+}/*cette fonction genere une erreur que je vois pas du tout
+c'est la fonction pr donner la nouvelle coordonnee apres deplacement.*/
+// tas oublié le return gros
+/*aussi commente tes fonctions et lignes de codes particulieres et correspondances selon projet et autres
+pour que je puisse comprendre plus facilement sans te deranger tout le temps*/
+ // ok ça marche
+ // je vais mettre les commentaires des fcts dans termites.h
 
 
 void initialiseTerrain(Terrain &t) {
@@ -63,12 +73,10 @@ void initialiseTerrain(Terrain &t) {
         for (int x = 0; x < TAILLE; x++) {
             if (aleatoire(POURCENTAGE_TERMITES/100.)) {
                 // aleatoire est entre 0 et 1
-
                 Place p = t.places[y][x];
                 p.type = PLACE_TYPE_TERMITE;
                 p.indtermite = t.nbtermites;
                 t.places[y][x] = p;
-
                 t.termites[p.indtermite] = creerTermite(p.indtermite, x, y);
                 t.nbtermites++;
             } else {

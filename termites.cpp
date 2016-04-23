@@ -43,6 +43,19 @@ bool contient_brindille(Place &p) {
     p.type = PLACE_TYPE_BRINDILLE;
     return true;
 }
+bool est_vide(Place &p){
+return  p.type=PLACE_TYPE_VIDE;
+}//verifie  par des booleens si une place est vide ou contient un termite ou une brindille
+
+/*Coord coord_devant(Termite t){
+int ind[8][2]={{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1}};
+ creerCoord(t.coord.x+ind[t.direction,0],t.coord.y+ind[t.direction,1]);
+}cette fonction genere une erreur que je vois pas du tout
+c'est la fonction pr donner la nouvelle coordonnee apres deplacement.
+aussi commente tes fonctions et lignes de codes particulieres et correspondances selon projet et autres
+pour que je puisse comprendre plus facilement sans te deranger tout le temps
+*/
+
 
 void initialiseTerrain(Terrain &t) {
     t.nbtermites = 0;

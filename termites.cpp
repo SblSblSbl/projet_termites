@@ -40,13 +40,13 @@ void placeVide(Place &p) {
     p.type = PLACE_TYPE_VIDE;
 }
 
-bool contientTermite(Place &p) {
+bool contientTermite(Place p) {
     return p.type == PLACE_TYPE_TERMITE;
 }
-bool contientBrindille(Place &p) {
+bool contientBrindille(Place p) {
     return p.type == PLACE_TYPE_BRINDILLE;
 }
-bool estVide(Place &p) {
+bool estVide(Place p) {
     return p.type == PLACE_TYPE_VIDE;
 }//verifie  par des booleens si une place est vide ou contient un termite ou une brindille
 

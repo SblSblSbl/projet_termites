@@ -115,6 +115,15 @@ Coord coordDevant(Termite m);
  * Initialise un terrain en lui attribuant ses valeurs de début
  * @param &t référence vers le terrain cible
  */
+  void A_gauche(Termite &t);
+ /** fait tourner un termite à gauche
+ * @param &t reference vers la direction du termite
+ */
+ void A_droite(Termite &t);
+ /**fait tourner le termite à droite
+ *@param &t une reference vers la direction du termite
+ */
+
 void initialiseTerrain(Terrain &t);
 
 /**

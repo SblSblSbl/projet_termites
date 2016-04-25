@@ -65,6 +65,12 @@ c'est la fonction pr donner la nouvelle coordonnee apres deplacement.*/
 pour que je puisse comprendre plus facilement sans te deranger tout le temps*/
  // ok ça marche
  // je vais mettre les commentaires des fcts dans termites.h
+void A_gauche(Termite &t){
+t.direction=(t.direction+1)%8;
+}//tourne termite à gauche
+void A_droite(Termite &t){
+t.direction=(t.direction-1)%8;
+}//tourne termite à droite
 
 
 void initialiseTerrain(Terrain &t) {

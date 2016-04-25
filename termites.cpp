@@ -61,12 +61,12 @@ Coord coordDevant(Termite t){
 }
 
 void tourneGauche(Termite &t){
-    t.direction=(t.direction-1)%8;
-}//tourne termite à gauche
-void tourneDroite(Termite &t){
-    t.direction=(t.direction+1)%8;
-}//tourne termite à droite
+    t.direction=(t.direction - 1) % NB_DIRECTIONS;
+}
 
+void tourneDroite(Termite &t){
+    t.direction=(t.direction + 1) % NB_DIRECTIONS8;
+}
 
 void initialiseTerrain(Terrain &t) {
     t.nbtermites = 0;

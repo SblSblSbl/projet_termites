@@ -58,18 +58,13 @@ Coord coordDevant(Termite t){
     int ind[8][2] = {{0,-1}, {-1,1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}};
     //          haut| haut_droite| droite| ba|s_droite |bas |bas_gauche |gauche |haut_gauche
     return creerCoord(t.coord.x + ind[t.direction][0], t.coord.y + ind[t.direction][1]);
-}/*cette fonction genere une erreur que je vois pas du tout
-c'est la fonction pr donner la nouvelle coordonnee apres deplacement.*/
-// tas oublié le return gros
-/*aussi commente tes fonctions et lignes de codes particulieres et correspondances selon projet et autres
-pour que je puisse comprendre plus facilement sans te deranger tout le temps*/
- // ok ça marche
- // je vais mettre les commentaires des fcts dans termites.h
-void A_gauche(Termite &t){
-t.direction=(t.direction+1)%8;
+}
+
+void tourneGauche(Termite &t){
+    t.direction=(t.direction-1)%8;
 }//tourne termite à gauche
-void A_droite(Termite &t){
-t.direction=(t.direction-1)%8;
+void tourneDroite(Termite &t){
+    t.direction=(t.direction+1)%8;
 }//tourne termite à droite
 
 

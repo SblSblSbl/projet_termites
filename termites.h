@@ -111,19 +111,22 @@ bool contientBrindille(Place p);
  */
 Coord coordDevant(Termite m);
 
+/** 
+ * Fait tourner un termite à gauche
+ * @param &t réference vers le termite cible
+ */
+void tourneGauche(Termite &t);
+
+/**
+ * Fait tourner un termite à droite
+ * @param &t réference vers le terrain cible
+ */
+void tourneDroite(Termite &t);
+
 /**
  * Initialise un terrain en lui attribuant ses valeurs de début
  * @param &t référence vers le terrain cible
  */
-  void A_gauche(Termite &t);
- /** fait tourner un termite à gauche
- * @param &t reference vers la direction du termite
- */
- void A_droite(Termite &t);
- /**fait tourner le termite à droite
- *@param &t une reference vers la direction du termite
- */
-
 void initialiseTerrain(Terrain &t);
 
 /**

@@ -242,7 +242,7 @@ int main() {
                 usleep(20000); // si on appuie sur 's', attendre 20ms
                 break;
             } else if (c == 'F') {
-                for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'a', faire 50 itérations (F : avance rapide)
+                for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'f', faire 50 itérations (F : avance rapide)
                 break;
             } else if (c == 'G') {
                 for (int i = 0; i < 250; i++) mouvementTermites(t); // si on appuie sur 'g', faire 250 itérations

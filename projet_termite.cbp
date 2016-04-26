@@ -32,7 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="s91k2048_outils_terminal.cpp" />
 		<Unit filename="termites.cpp" />
+		<Unit filename="s91k2048_const.h" />
+		<Unit filename="s91k2048_outils_terminal.h" />
 		<Unit filename="termites.h" />
 		<Extensions>
 			<code_completion />

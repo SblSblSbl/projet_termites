@@ -3,7 +3,9 @@
 #include <ctime>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
+#include "s91k2048_outils_terminal.h"
 #include "termites.h"
 using namespace std;
 
@@ -11,12 +13,14 @@ void WTF(string str) {
     cout << "\x1B[41m \x1B[1mWTF : \x1B[2m" << str << " \x1B[0m";
 };
 
-
 bool aleatoire(double p) {
     return rand() < p*(RAND_MAX + 1.);
 }
 int directionAleatoire() {
     return rand() % NB_DIRECTIONS;
+}
+int sensRotationAleatoire() {
+    return rand() % 2;
 }
 
 Coord creerCoord(int i, int j) {
@@ -25,6 +29,15 @@ Coord creerCoord(int i, int j) {
    c.y = j;
    return c;
 }
+void copierCoordDans(Coord &dest, Coord src) {
+    dest.x = src.x;
+    dest.y = src.y;
+}
+bool estDansTerrain(Coord coord) {
+    return coord.x >= 0 && coord.y >= 0
+            && coord.x < TAILLE && coord.y < TAILLE;
+}
+
 Termite creerTermite(int indice, int x, int y) {
     Termite m;
     m.coord = creerCoord(x, y);
@@ -33,11 +46,18 @@ Termite creerTermite(int indice, int x, int y) {
     m.brindille = false;
     m.tourner_sur_place = false;
     m.sablier = 0;
+    m.sensRotation = sensRotationAleatoire();
     return m;
+}
+bool porteBrindille(Termite m) {
+    return m.brindille;
 }
 
 void placeVide(Place &p) {
     p.type = PLACE_TYPE_VIDE;
+}
+int typePlace(Place p) {
+    return p.type;
 }
 
 bool contientTermite(Place p) {
@@ -50,22 +70,45 @@ bool estVide(Place p) {
     return p.type == PLACE_TYPE_VIDE;
 }//verifie  par des booleens si une place est vide ou contient un termite ou une brindille
 
+Place& coord2Place(Terrain &t, Coord coord) {
+    return t.places[coord.y][coord.x];
+}
+
+void changerTypePlace(Place &p, int type) {
+    p.type = type;
+}
+
 Coord coordDevant(Termite t){
     if (t.direction < 0 || t.direction >= NB_DIRECTIONS) { // pas bien
         WTF("[coordDevant] Termite mutante");
         return creerCoord(-1, -1);
     }
-    int ind[8][2] = {{0,-1}, {-1,1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}};
+    int ind[8][2] = {{0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}};
     //          haut| haut_droite| droite| ba|s_droite |bas |bas_gauche |gauche |haut_gauche
     return creerCoord(t.coord.x + ind[t.direction][0], t.coord.y + ind[t.direction][1]);
 }
 
-void tourneGauche(Termite &t){
-    t.direction=(t.direction - 1) % NB_DIRECTIONS;
+void definirSensRotationTermite(Termite &m, int sens) {
+    m.sensRotation = sens;
 }
 
-void tourneDroite(Termite &t){
-    t.direction=(t.direction + 1) % NB_DIRECTIONS8;
+void tourneGauche(Termite &m){
+    m.direction = (m.direction - 1);
+    if (m.direction < 0) {
+        m.direction += NB_DIRECTIONS;
+    }
+}
+
+void tourneDroite(Termite &m){
+    m.direction = (m.direction + 1) % NB_DIRECTIONS;
+}
+
+void tourneTermite(Termite &m) {
+    if (m.sensRotation == SENS_ROTATION_GAUCHE) {
+        tourneGauche(m);
+    } else {
+        tourneDroite(m);
+    }
 }
 
 void initialiseTerrain(Terrain &t) {
@@ -114,38 +157,96 @@ void afficheTermite(Termite m) {
     }
 }
 void afficheTerrain(Terrain t) {
-    for(int y = 0; y < TAILLE; y++) {
+    for (int y = 0; y < TAILLE; y++) {
+    //    cout << "\x1B[1m"; // gras
         if (y) cout << endl;
         for (int x = 0; x < TAILLE; x++) {
-            Place p = t.places[y][x];
-            int type_place = p.type;
-            switch (type_place){
+            Place &p = coord2Place(t, creerCoord(x, y));
+            switch (typePlace(p)){
                 case PLACE_TYPE_VIDE:{
-                    cout << "-";
+                //    cout << "\x1B[44m"; // couleur bleue
+                    cout << '_';
                 break;
                 }
                 case PLACE_TYPE_BRINDILLE:{
-                    cout << "0";
+                //    cout << "\x1B[47m"; // couleur blanche
+                    cout << '0';
                 break;
                 }
                 case PLACE_TYPE_TERMITE:{
                     Termite m = t.termites[p.indtermite];
+                //    cout << (porteBrindille(m) ? "\x1B[43m" : "\x1B[42m"); // couleur orange / verte
                     afficheTermite(m);
                 break;
                 }
                 default:
                     cout << "?";
             }
+        //    cout << " ";
         }
+    //    cout << "\x1B[0m"; // reset couleurs
     }
+    cout << endl;
+}
+
+void chargerBrindille(Termite &m, Place &p) {
+    /* TODO */
+}
+void dechargerBrindille(Termite &m, Place &p) {
+    /* TODO */
+}
+
+bool actionPlaceTermite(Termite &m, Place &p) {
+    /* TODO */
+}
+
+void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
+    /* TODO */
+}
+
+void mouvementTermites(Terrain &t) {
+    /* TODO */
+}
+
+void quitterApplication() {
     cout << endl << endl;
+    definirModeTerminal(false); // on redonne le contrôle du terminal à l'utilisateur
+    exit(0);
 }
 
 int main() {
     srand(time(NULL));
+    definirModeTerminal(true); // on prend le contrôle du terminal, pour que getchar() 
+                               // n'attende pas que l'utilisateur ait saisi une touche
+
     cout << endl;
     Terrain t;
     initialiseTerrain(t);
     afficheTerrain(t);
+
+    char c;
+    while (true) {
+        cout << "Entrer commande : ";
+        do {
+            c = toupper(getchar()); // On obtient la touche saisie par l'utilisateur...
+            if (c == '\r') continue; // windows envoie des \r intempestifs
+            else if (c == 'C') quitterApplication(); // la touche c quitte l'application
+            else if (c == '\n') usleep(50000); // si on appuie sur entrée, attendre 50ms
+            else if (c == 'Q') usleep(40000); // si on appuie sur 's', attendre 40ms
+            else if (c == 'S') usleep(20000); // si on appuie sur 's', attendre 20ms
+            else if (c == 'A') for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'a', faire 50 itérations
+            else if (c == 'G') for (int i = 0; i < 250; i++) mouvementTermites(t); // si on appuie sur 'g', faire 250 itérations
+            else if (c == 'H') for (int i = 0; i < 500; i++) mouvementTermites(t); // si on appuie sur 'h', faire 500 itérations
+            else if (c == 'J') for (int i = 0; i < 1000; i++) mouvementTermites(t); // si on appuie sur 'j', faire 1000 itérations
+            fflush(stdin); // on essaie de supprimer les touches pressées pendant les temps d'attente
+        } while (c != '\n' && c != 'S' && c != 'D' && c != 'A' && c != 'G' && c != 'H' && c != 'J');
+                // ...Jusqu'à ce que la touche entrée, s, d, a, g, h ou j soit pressée (s : avance rapide; d, g, h, j : avance très rapide)
+        cout << endl;
+        mouvementTermites(t); // on continue l'animation
+        afficheTerrain(t);
+        usleep(10000); // on attend 10ms pour que l'animation soit fluide
+    }
+
+    quitterApplication();
     return 0;
 }

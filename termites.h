@@ -22,6 +22,10 @@ enum {
     DIRECTION_GAUCHE_HAUT,
     NB_DIRECTIONS
 } directions;
+enum {
+	SENS_ROTATION_GAUCHE,
+	SENS_ROTATION_DROITE
+} sens_rotation;
 
 struct Coord {
     int x;
@@ -34,6 +38,7 @@ struct Place {
 struct Termite {
     Coord coord;
     int direction;
+    int sensRotation;
     int indice;
     int sablier;
     bool brindille;

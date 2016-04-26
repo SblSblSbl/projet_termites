@@ -227,20 +227,34 @@ int main() {
     char c;
     while (true) {
         cout << "Entrer commande : ";
-        do {
+        while (true) {
             c = toupper(getchar()); // On obtient la touche saisie par l'utilisateur...
-            if (c == '\r') continue; // windows envoie des \r intempestifs
-            else if (c == 'C') quitterApplication(); // la touche c quitte l'application
-            else if (c == '\n') usleep(50000); // si on appuie sur entrée, attendre 50ms
-            else if (c == 'Q') usleep(40000); // si on appuie sur 's', attendre 40ms
-            else if (c == 'S') usleep(20000); // si on appuie sur 's', attendre 20ms
-            else if (c == 'A') for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'a', faire 50 itérations
-            else if (c == 'G') for (int i = 0; i < 250; i++) mouvementTermites(t); // si on appuie sur 'g', faire 250 itérations
-            else if (c == 'H') for (int i = 0; i < 500; i++) mouvementTermites(t); // si on appuie sur 'h', faire 500 itérations
-            else if (c == 'J') for (int i = 0; i < 1000; i++) mouvementTermites(t); // si on appuie sur 'j', faire 1000 itérations
-            fflush(stdin); // on essaie de supprimer les touches pressées pendant les temps d'attente
-        } while (c != '\n' && c != 'S' && c != 'D' && c != 'A' && c != 'G' && c != 'H' && c != 'J');
-                // ...Jusqu'à ce que la touche entrée, s, d, a, g, h ou j soit pressée (s : avance rapide; d, g, h, j : avance très rapide)
+            if (c == 'C') { // la touche c quitte l'application
+                quitterApplication();
+                break;
+            } else if (c == '\n') {
+                usleep(50000); // si on appuie sur entrée, attendre 50ms (Entrée : avance frame à frame)
+                break;
+            } else if (c == 'Q') {
+                usleep(40000); // si on appuie sur 's', attendre 40ms
+                break;
+            } else if (c == 'S') {
+                usleep(20000); // si on appuie sur 's', attendre 20ms
+                break;
+            } else if (c == 'F') {
+                for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'a', faire 50 itérations (F : avance rapide)
+                break;
+            } else if (c == 'G') {
+                for (int i = 0; i < 250; i++) mouvementTermites(t); // si on appuie sur 'g', faire 250 itérations
+                break;
+            } else if (c == 'H') {
+                for (int i = 0; i < 500; i++) mouvementTermites(t); // si on appuie sur 'h', faire 500 itérations
+                break;
+            } else if (c == 'J') {
+                for (int i = 0; i < 1000; i++) mouvementTermites(t); // si on appuie sur 'j', faire 1000 itérations (J : avance très rapide)
+                break;
+            }
+        }
         cout << endl;
         mouvementTermites(t); // on continue l'animation
         afficheTerrain(t);

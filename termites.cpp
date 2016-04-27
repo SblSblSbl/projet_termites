@@ -190,22 +190,15 @@ void afficheTerrain(Terrain t) {
 }
 
 void chargerBrindille(Termite &m, Place &p) {
-Terrain T;
-//T.places[coordDevant(m).x][coordDevant(m).y]=PLACE_TYPE_BRINDILLE;
-//j'ai un probleme ici et qques confusio,
-placeVide(p);
-m.brindille=true;
-    /* TODO */
+    placeVide(p);
+    m.brindille=true;
 }
+
 void dechargerBrindille(Termite &m, Place &p) {
-Terrain T;
-p.type=PLACE_TYPE_BRINDILLE;
-//T.places[coordDevant(t).x][coordDevant((t).y)]=PLACE_TYPE_VIDE;
-//j'ai un probleme ici et des confusions entre charger et decharger et les erreurs sur les types
-//les structures etant definis de facon un peu differentes de ceux qu'on nous a demande.
-m.brindille=false;
-    /* TODO */
+    changerTypePlace(p, PLACE_TYPE_BRINDILLE);
+    m.brindille=false;
 }
+
 bool actionPlaceTermite(Termite &m, Place &p) {
     /* TODO */
 }

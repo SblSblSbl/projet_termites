@@ -200,18 +200,18 @@ void dechargerBrindille(Termite &m, Place &p) {
 }
 
 bool actionPlaceTermite(Termite &m, Place &p) {
-if(estVide(p)==false){
-p.type=PLACE_TYPE_BRINDILLE;
-chargerBrindille(m,p);
-return false;
-
-
-}else{
-p.type=PLACE_TYPE_VIDE;
-dechargerBrindille(m,p);
-return true;
-}
-    /* TODO */
+    switch (typePlace(p)) {
+        case PLACE_TYPE_TERMITE:
+            definirSensRotationTermite(m, SENS_ROTATION_DROITE);
+            tourneTermite(m);
+            return true;
+        case PLACE_TYPE_BRINDILLE:
+            /* TODO */
+            return true;
+        case PLACE_TYPE_VIDE:
+        default:
+            return false;
+    }
 }
 
 void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
@@ -219,15 +219,15 @@ void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
 }
 
 void mouvementTermites(Terrain &t) {
-    /* TODO */
     for (int i = 0; i < t.nbtermites; i++) {
         Termite &m = t.termites[i];
         Coord coord = coordDevant(m);
         if (!estDansTerrain(coord)) { // le termite est arrivé au bord du terrain, il tourne
             definirSensRotationTermite(m, sensRotationAleatoire());
             tourneTermite(m);
-        } else {
-            if (!actionTermite(t, m, coord)) { // le termite essaye d'agir avec la place se trouvant devant lui...
+        } else { /* TODO */
+            Place &p = coord2Place(t, coord);
+            if (!actionPlaceTermite(t, p)) { // le termite essaye d'agir avec la place se trouvant devant lui...
                 deplaceTermiteDansTerrain(t, m, coord); // ...mais rien ne se passe; le termite avance
             }
         }

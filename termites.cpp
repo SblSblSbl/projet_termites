@@ -227,7 +227,7 @@ void mouvementTermites(Terrain &t) {
             tourneTermite(m);
         } else { /* TODO */
             Place &p = coord2Place(t, coord);
-            if (!actionPlaceTermite(t, p)) { // le termite essaye d'agir avec la place se trouvant devant lui...
+            if (!actionPlaceTermite(m, p)) { // le termite essaye d'agir avec la place se trouvant devant lui...
                 deplaceTermiteDansTerrain(t, m, coord); // ...mais rien ne se passe; le termite avance
             }
         }

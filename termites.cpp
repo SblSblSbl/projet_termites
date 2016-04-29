@@ -200,6 +200,17 @@ void dechargerBrindille(Termite &m, Place &p) {
 }
 
 bool actionPlaceTermite(Termite &m, Place &p) {
+if(estVide(p)==false){
+p.type=PLACE_TYPE_BRINDILLE;
+chargerBrindille(m,p);
+return false;
+
+
+}else{
+p.type=PLACE_TYPE_VIDE;
+dechargerBrindille(m,p);
+return true;
+}
     /* TODO */
 }
 

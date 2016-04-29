@@ -209,6 +209,18 @@ void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
 
 void mouvementTermites(Terrain &t) {
     /* TODO */
+    for (int i = 0; i < t.nbtermites; i++) {
+        Termite &m = t.termites[i];
+        Coord coord = coordDevant(m);
+        if (!estDansTerrain(coord)) { // le termite est arrivé au bord du terrain, il tourne
+            definirSensRotationTermite(m, sensRotationAleatoire());
+            tourneTermite(m);
+        } else {
+            if (!actionTermite(t, m, coord)) { // le termite essaye d'agir avec la place se trouvant devant lui...
+                deplaceTermiteDansTerrain(t, m, coord); // ...mais rien ne se passe; le termite avance
+            }
+        }
+    }
 }
 
 void quitterApplication() {

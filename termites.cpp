@@ -217,14 +217,10 @@ bool actionPlaceTermite(Termite &m, Place &p) {
 void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
    Place &old_place=coord2Place(t,m.coord);
    Place  &new_place=coord2Place(t,coord);
-   old_place.type=PLACE_TYPE_VIDE;
-   new_place.type=PLACE_TYPE_TERMITE;
    new_place.indtermite=m.indice;
-   copierCoordDans(m.coord;coord);
-   m.coord.x=coord.x;
-   m.coord.y=coord.y;
- 
-   changerTypePlace(old_place,old_place.type);
+   copierCoordDans(m.coord,coord);
+   changerTypePlace(old_place,PLACE_TYPE_VIDE);
+   changerTypePlace(new_place,PLACE_TYPE_TERMITE);
    
 
 }

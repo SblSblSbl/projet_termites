@@ -221,8 +221,9 @@ void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
    new_place.type=PLACE_TYPE_TERMITE;
    new_place.indtermite=m.indice;
    copierCoordDans(m.coord;coord);
-   //coord.x=m.coord.x;
-   //coord.y=m.coord.y;
+   m.coord.x=coord.x;
+   m.coord.y=coord.y;
+ 
    changerTypePlace(old_place,old_place.type);
    
 

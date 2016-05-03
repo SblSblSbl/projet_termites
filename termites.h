@@ -25,7 +25,7 @@ enum {
 enum {
 	SENS_ROTATION_GAUCHE,
 	SENS_ROTATION_DROITE
-} sens_rotation;
+} sens_rotation_enum;
 
 struct Coord {
     int x;
@@ -37,12 +37,14 @@ struct Place {
 };
 struct Termite {
     Coord coord;
+    Coord ancien_coord;
     int direction;
-    int sensRotation;
-    int indice;
+    int sens_rotation;
     int sablier;
-    bool brindille;
     bool tourner_sur_place;
+    bool vient_de_se_retourner;
+    bool brindille;
+    int indice;
 };
 struct Terrain {
     Place places[TAILLE][TAILLE];
@@ -76,6 +78,14 @@ int directionAleatoire();
  * @return les coordonnées {x, y}
  */
 Coord creerCoord(int i, int j);
+
+/**
+ * Vérifie si des coordonnées sont égales
+ * @param coord1 coordonnées
+ * @param coord2 coordonnées
+ * @return true si coord1 == coord2
+ */
+bool egalCoord(Coord coord1, Coord coord2);
 
 /**
  * Crée une termite

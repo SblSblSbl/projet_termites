@@ -33,6 +33,9 @@ void copierCoordDans(Coord &dest, Coord src) {
     dest.x = src.x;
     dest.y = src.y;
 }
+bool egalCoord(Coord coord1, Coord coord2) {
+    return coord1.x == coord2.x && coord1.y == coord2.y;
+}
 bool estDansTerrain(Coord coord) {
     return coord.x >= 0 && coord.y >= 0
             && coord.x < TAILLE && coord.y < TAILLE;
@@ -41,12 +44,13 @@ bool estDansTerrain(Coord coord) {
 Termite creerTermite(int indice, int x, int y) {
     Termite m;
     m.coord = creerCoord(x, y);
+    m.ancien_coord = creerCoord(x, y);
     m.indice = indice;
     m.direction = directionAleatoire();
     m.brindille = false;
-    m.tourner_sur_place = false;
     m.sablier = 0;
-    m.sensRotation = sensRotationAleatoire();
+    m.sens_rotation = sensRotationAleatoire();
+    m.tourner_sur_place = false;
     return m;
 }
 bool porteBrindille(Termite m) {
@@ -59,23 +63,22 @@ void placeVide(Place &p) {
 int typePlace(Place p) {
     return p.type;
 }
+void changerTypePlace(Place &p, int type) {
+    p.type = type;
+}
 
 bool contientTermite(Place p) {
-    return p.type == PLACE_TYPE_TERMITE;
+    return typePlace(p) == PLACE_TYPE_TERMITE;
 }
 bool contientBrindille(Place p) {
-    return p.type == PLACE_TYPE_BRINDILLE;
+    return typePlace(p) == PLACE_TYPE_BRINDILLE;
 }
 bool estVide(Place p) {
-    return p.type == PLACE_TYPE_VIDE;
+    return typePlace(p) == PLACE_TYPE_VIDE;
 }//verifie  par des booleens si une place est vide ou contient un termite ou une brindille
 
 Place& coord2Place(Terrain &t, Coord coord) {
     return t.places[coord.y][coord.x];
-}
-
-void changerTypePlace(Place &p, int type) {
-    p.type = type;
 }
 
 Coord coordDevant(Termite t){
@@ -89,7 +92,7 @@ Coord coordDevant(Termite t){
 }
 
 void definirSensRotationTermite(Termite &m, int sens) {
-    m.sensRotation = sens;
+    m.sens_rotation = sens;
 }
 
 void tourneGauche(Termite &m){
@@ -104,7 +107,7 @@ void tourneDroite(Termite &m){
 }
 
 void tourneTermite(Termite &m) {
-    if (m.sensRotation == SENS_ROTATION_GAUCHE) {
+    if (m.sens_rotation == SENS_ROTATION_GAUCHE) {
         tourneGauche(m);
     } else {
         tourneDroite(m);
@@ -184,29 +187,39 @@ void afficheTerrain(Terrain t) {
             }
         //    cout << " ";
         }
-    //    cout << "\x1B[0m"; // reset couleurs
+        cout << "\x1B[0m"; // reset couleurs
     }
     cout << endl;
 }
 
 void chargerBrindille(Termite &m, Place &p) {
     placeVide(p);
-    m.brindille=true;
+    m.brindille = true;
 }
 
 void dechargerBrindille(Termite &m, Place &p) {
     changerTypePlace(p, PLACE_TYPE_BRINDILLE);
-    m.brindille=false;
+    m.brindille = false;
 }
 
 bool actionPlaceTermite(Termite &m, Place &p) {
     switch (typePlace(p)) {
         case PLACE_TYPE_TERMITE:
-            definirSensRotationTermite(m, SENS_ROTATION_DROITE);
+            definirSensRotationTermite(m, sensRotationAleatoire());
             tourneTermite(m);
             return true;
         case PLACE_TYPE_BRINDILLE:
-            /* TODO */
+            if (m.vient_de_se_retourner) {
+                tourneTermite(m);
+            } else if (porteBrindille(m)) {
+                tourneTermite(m); // le termite tourne une fois sur place,
+                m.tourner_sur_place = true; // et il va le faire à chaque tour jusqu'à ce qu'il trouve une
+                                            // place vide pour poser sa brindille
+            } else { // tout est ok, il peut donc
+                chargerBrindille(m, p);    // charger la brindille,
+                m.sablier = NB_DIRECTIONS/2; // et se retourne
+                                             // le termite va tourner automatiquement pendant NB_DIRECTIONS/2 tours
+            }
             return true;
         case PLACE_TYPE_VIDE:
         default:
@@ -215,27 +228,52 @@ bool actionPlaceTermite(Termite &m, Place &p) {
 }
 
 void deplaceTermiteDansTerrain(Terrain &t, Termite &m, Coord coord) {
-   Place &old_place=coord2Place(t,m.coord);
-   Place  &new_place=coord2Place(t,coord);
-   new_place.indtermite=m.indice;
-   copierCoordDans(m.coord,coord);
-   changerTypePlace(old_place,PLACE_TYPE_VIDE);
-   changerTypePlace(new_place,PLACE_TYPE_TERMITE);
-   
+   Place &old_place = coord2Place(t, m.coord);
+   Place &new_place = coord2Place(t, coord);
 
+   changerTypePlace(old_place, PLACE_TYPE_VIDE);
+
+   changerTypePlace(new_place, PLACE_TYPE_TERMITE);
+   new_place.indtermite = m.indice;
+
+   copierCoordDans(m.ancien_coord, m.coord);
+   copierCoordDans(m.coord, coord);
 }
 
 void mouvementTermites(Terrain &t) {
-    for (int i = 0; i < t.nbtermites; i++) {
-        Termite &m = t.termites[i];
-        Coord coord = coordDevant(m);
-        if (!estDansTerrain(coord)) { // le termite est arrivé au bord du terrain, il tourne
-            definirSensRotationTermite(m, sensRotationAleatoire());
-            tourneTermite(m);
-        } else { /* TODO */
-            Place &p = coord2Place(t, coord);
-            if (!actionPlaceTermite(m, p)) { // le termite essaye d'agir avec la place se trouvant devant lui...
-                deplaceTermiteDansTerrain(t, m, coord); // ...mais rien ne se passe; le termite avance
+    for (int i = 0; i < t.nbtermites; i++) { // on parcourt le tableau contenant tous les termites du terrain
+        Termite &m = t.termites[i]; // on prend le termite courant
+        if (m.sablier > 0) { // ...sinon, si son sablier est positif...
+            tourneTermite(m); // il tourne automatiquement,
+            m.sablier--; // et décrémente son sablier
+            if (m.sablier == 0) {
+                m.vient_de_se_retourner = true; // on interdit au termite de charger une brindille au prochain tour
+            }
+        } else {
+            Coord coord = coordDevant(m); // on récupère les coordonnées de la place se trouvant devant lui
+            if (!estDansTerrain(coord)) { // le termite est arrivé au bord du terrain, il tourne...
+                definirSensRotationTermite(m, sensRotationAleatoire());
+                tourneTermite(m);
+            } else { // ...sinon
+                Place &p = coord2Place(t, coord); // on récupère la place se trouvant devant le termite
+                if (!actionPlaceTermite(m, p)) { // ce dernier essaie d'agir avec elle...
+                    // ...mais rien ne se passe, c'est donc une place vide
+                    if (m.tourner_sur_place && !egalCoord(coord, m.ancien_coord)) { // si le termite veut déposer sa brindille sur
+                                                                          // la place vide la plus proche,
+                                                                          // et si ce n'est pas sa case d'entrée.. // => on préserve la liberté des termites
+                        dechargerBrindille(m, p); // il décharge sa brindille sur la place vide devant lui,
+                        m.sablier = NB_DIRECTIONS/2-1; // et se retourne // on peut aussi mettre NB_DIRECTIONS/2-1
+                                                                       // (alternative à bool vient_de_se_retourner,
+                                                                       // mais il ne va pas se retourner complètement)
+                        m.tourner_sur_place = false;
+                    } else if (rand()%10 < 1) { // ..le termite a 1 chance sur 10 de tourner dans une direction aléatoire..
+                        definirSensRotationTermite(m, sensRotationAleatoire());
+                        tourneTermite(m);
+                    } else { // ..sinon,
+                        deplaceTermiteDansTerrain(t, m, coord); // le termite avance
+                    }
+                    m.vient_de_se_retourner = false;
+                }
             }
         }
     }
@@ -260,36 +298,42 @@ int main() {
     char c;
     while (true) {
         cout << "Entrer commande : ";
+        int nb_passes = 1;
         while (true) {
             c = toupper(getchar()); // On obtient la touche saisie par l'utilisateur...
             if (c == 'C') { // la touche c quitte l'application
                 quitterApplication();
                 break;
             } else if (c == '\n') {
-                usleep(50000); // si on appuie sur entrée, attendre 50ms (Entrée : avance frame à frame)
+                usleep(50000); // si on appuie sur entrée, attendre 50ms faire une passe (Entrée : avance frame à frame)
                 break;
             } else if (c == 'Q') {
-                usleep(40000); // si on appuie sur 's', attendre 40ms
+                usleep(40000); // si on appuie sur 's', attendre 40ms et faire une passe
                 break;
             } else if (c == 'S') {
-                usleep(20000); // si on appuie sur 's', attendre 20ms
+                usleep(20000); // si on appuie sur 's', attendre 20ms et faire une passe
+                break;
+            } else if (c == 'S') {
+                usleep(5000); // si on appuie sur 's', faire une passe
                 break;
             } else if (c == 'F') {
-                for (int i = 0; i < 50; i++) mouvementTermites(t); // si on appuie sur 'f', faire 50 itérations (F : avance rapide)
+                nb_passes = 50; // si on appuie sur 'f', faire 50 passes
                 break;
             } else if (c == 'G') {
-                for (int i = 0; i < 250; i++) mouvementTermites(t); // si on appuie sur 'g', faire 250 itérations
+                nb_passes = 250; // si on appuie sur 'g', faire 250 passes
                 break;
             } else if (c == 'H') {
-                for (int i = 0; i < 500; i++) mouvementTermites(t); // si on appuie sur 'h', faire 500 itérations
+                nb_passes = 500; // si on appuie sur 'h', faire 500 passes
                 break;
             } else if (c == 'J') {
-                for (int i = 0; i < 1000; i++) mouvementTermites(t); // si on appuie sur 'j', faire 1000 itérations (J : avance très rapide)
+                nb_passes = 1000;
                 break;
             }
         }
         cout << endl;
-        mouvementTermites(t); // on continue l'animation
+        for (int i = 0; i < nb_passes; i++) {
+            mouvementTermites(t); // on continue l'animation
+        }
         afficheTerrain(t);
         usleep(10000); // on attend 10ms pour que l'animation soit fluide
     }

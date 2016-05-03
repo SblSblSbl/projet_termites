@@ -96,11 +96,27 @@ bool egalCoord(Coord coord1, Coord coord2);
  */
 Termite creerTermite(int indice, int x, int y);
 
+
+
 /**
  * Initialise une place vide
  * @param &p référence vers la place cible
  */
 void placeVide(Place &p);
+
+/**
+ * Renvoie le type d'une place
+ * @param p place cible
+ * @return le type de p
+ */
+int typePlace(Place p);
+
+/**
+ * Modifie le type d'une place
+ * @param &p référence vers la place cible
+ * @param type nouveau type de p
+ */
+void changerTypePlace(Place &p, int type);
 
 /**
  * Vérifie si une place contient une termite

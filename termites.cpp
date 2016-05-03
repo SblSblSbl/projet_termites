@@ -187,7 +187,7 @@ void afficheTerrain(Terrain t) {
             }
         //    cout << " ";
         }
-        cout << "\x1B[0m"; // reset couleurs
+    //    cout << "\x1B[0m"; // reset couleurs
     }
     cout << endl;
 }

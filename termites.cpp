@@ -161,24 +161,24 @@ void afficheTermite(Termite m) {
 }
 void afficheTerrain(Terrain t) {
     for (int y = 0; y < TAILLE; y++) {
-    //    cout << "\x1B[1m"; // gras
+        cout << "\x1B[1m"; // gras
         if (y) cout << endl;
         for (int x = 0; x < TAILLE; x++) {
             Place &p = coord2Place(t, creerCoord(x, y));
             switch (typePlace(p)){
                 case PLACE_TYPE_VIDE:{
-                //    cout << "\x1B[44m"; // couleur bleue
-                    cout << '_';
+                    cout << "\x1B[44m"; // couleur bleue
+                    cout << ' ';
                 break;
                 }
                 case PLACE_TYPE_BRINDILLE:{
-                //    cout << "\x1B[47m"; // couleur blanche
+                    cout << "\x1B[47m"; // couleur blanche
                     cout << '0';
                 break;
                 }
                 case PLACE_TYPE_TERMITE:{
                     Termite m = t.termites[p.indtermite];
-                //    cout << (porteBrindille(m) ? "\x1B[43m" : "\x1B[42m"); // couleur orange / verte
+                    cout << (porteBrindille(m) ? "\x1B[43m" : "\x1B[42m"); // couleur orange / verte
                     afficheTermite(m);
                 break;
                 }
@@ -187,7 +187,7 @@ void afficheTerrain(Terrain t) {
             }
         //    cout << " ";
         }
-    //    cout << "\x1B[0m"; // reset couleurs
+        cout << "\x1B[0m"; // reset couleurs
     }
     cout << endl;
 }

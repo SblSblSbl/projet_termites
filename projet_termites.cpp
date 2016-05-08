@@ -201,10 +201,17 @@ int main() {
 
     bool mouvement_automatique = false;
 
+    char c;
+
     while (true) {
-        if (mouvement_automatique) {
+
+        if (mouvement_automatique) { // mouvement automatique...
             do {
-                if (toupper(getchar()) == 'P') {
+                c = toupper(getchar());
+                if (c == 'C') {
+                    quitterApplication();
+                    break;
+                } else if (c == 'P') {
                     mouvement_automatique = false;
                 } else {
                     cout << "\x1B[1mAppuyer sur C pour quitter\x1B[0m | P : désactiver le mode automatique" << endl;
@@ -213,9 +220,8 @@ int main() {
                     afficheTerrain(t);
                 }
             } while (mouvement_automatique);
-        } else {
 
-            char c;
+        } else { // ...mouvement non automatique
             do {
                 cout << "\x1B[1mAppuyer sur C pour quitter\x1B[0m | Entrée : avancer ; Q...J : avance rapide ; P : mode auto | "
                      << "Entrer commande : ";

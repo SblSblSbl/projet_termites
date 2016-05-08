@@ -3,7 +3,7 @@
 
 #include <termios.h>
 #include <fcntl.h>
-#include <sys/fcntl.h>
+//#include <sys/fcntl.h>
 #include <stdio.h>
 #include "projet_termites_outils_terminal.h"
 

@@ -1,8 +1,9 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <string>
+#include <ctype.h> // pour toupper()
+#include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
+#include <iostream>
+#include <string>
 
 #include "projet_termites_outils_terminal.h"
 #include "projet_termites_common.h"

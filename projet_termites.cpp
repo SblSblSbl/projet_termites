@@ -232,7 +232,7 @@ int main() {
                         quitterApplication();
                         break;
                     } else if (c == '\n') {
-                        usleep(30000); // si on appuie sur entrée, attendre 35ms puis faire une passe (Entrée : avance frame à frame)
+                        usleep(60000); // si on appuie sur entrée, attendre 60ms puis faire une passe (Entrée : avance frame à frame)
                         break;
                     } else if (c == 'Q') {
                         usleep(20000); // si on appuie sur 'q', attendre 20ms puis faire une passe
@@ -253,7 +253,7 @@ int main() {
                         nb_passes = 500; // si on appuie sur 'h', faire 500 passes
                         break;
                     } else if (c == 'J') {
-                        nb_passes = 1000;
+                        nb_passes = 1000; // si on appuie sur 'h', faire 500 passes
                         break;
                     } else if (c == 'P') {
                         mouvement_automatique = true;

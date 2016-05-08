@@ -2,6 +2,9 @@
 #define PROJET_TERMITES_COMMON_H
 
 #include <string>
+#include "projet_termites_outils_terminal.h"
+
+#define MSG_KEYS CC_POLICE_GRAS "  C" CC_RESET " EXIT " CC_POLICE_GRAS " ENTRÉE" CC_RESET " PLAY" CC_POLICE_GRAS "  Q-J" CC_RESET " FWD" CC_RESET
 
 const int TAILLE = 40;
 const double POURCENTAGE_TERMITES = 1.;

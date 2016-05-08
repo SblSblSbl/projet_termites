@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-#include "s91k2048_outils_terminal.h"
+#include "projet_termites_outils_terminal.h"
 #include "projet_termites_common.h"
 
 using namespace std;

@@ -100,24 +100,29 @@ void teleporterTermite(Termite &m, Coord coord) {
 }
 
 void afficheTermite(Termite m) {
+    if (porteBrindilleTermite(m)) {
+        cout << CC_FOND_ORANGE;
+    } else {
+        cout << CC_FOND_VERT;
+    }
     switch (m.direction) {
         case DIRECTION_GAUCHE:
         case DIRECTION_DROITE:
-            cout << "-";
+            cout << '-';
             break;
         case DIRECTION_HAUT:
         case DIRECTION_BAS:
-            cout << "|";
+            cout << '|';
             break;
         case DIRECTION_GAUCHE_HAUT:
         case DIRECTION_DROITE_BAS:
-            cout << "\\";
+            cout << '\\';
             break;
         case DIRECTION_GAUCHE_BAS:
         case DIRECTION_DROITE_HAUT:
-            cout << "/";
+            cout << '/';
             break;
         default:
-            cout << "D";
+            cout << 'X';
     }
 }

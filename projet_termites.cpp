@@ -4,7 +4,7 @@
 #include <string>
 #include <unistd.h>
 
-#include "s91k2048_outils_terminal.h"
+#include "projet_termites_outils_terminal.h"
 #include "projet_termites_common.h"
 #include "projet_termites.h"
 #include "termite.h"
@@ -77,35 +77,34 @@ void initialiseTerrain(Terrain &t) {
 }
 
 void afficheTerrain(Terrain t) {
-    cout << CLEAR_TERMINAL;
+    cout << CURSEUR_DEBUT << endl;
     for (int y = 0; y < TAILLE; y++) {
-        cout << "\x1B[1m"; // gras
         if (y) cout << endl;
+        cout << ' ' << CC_POLICE_GRAS;
         for (int x = 0; x < TAILLE; x++) {
             Place &p = coord2Place(t, creerCoord(x, y));
             switch (typePlace(p)){
                 case PLACE_TYPE_VIDE:{
-                    cout << "\x1B[44m"; // couleur bleue
+                    cout << CC_FOND_BLEU;
                     cout << ' ';
                 break;
                 }
                 case PLACE_TYPE_BRINDILLE:{
-                    cout << "\x1B[47m"; // couleur blanche
+                    cout << CC_FOND_BLANC;
                     cout << '0';
                 break;
                 }
                 case PLACE_TYPE_TERMITE:{
                     Termite m = t.termites[p.indtermite];
-                    cout << (porteBrindilleTermite(m) ? "\x1B[43m" : "\x1B[42m"); // couleur orange / verte
                     afficheTermite(m);
                 break;
                 }
                 default:
-                    cout << "?";
+                    cout << '?';
             }
         //    cout << " "; // décommenter pour que les places soient des carrés et pas des rectangles
         }
-        cout << "\x1B[0m"; // reset couleurs
+        cout << CC_RESET; // reset couleurs
     }
     cout << endl;
 }
@@ -195,13 +194,14 @@ int main() {
     definirModeTerminal(true); // on prend le contrôle du terminal, pour que getchar() 
                                // n'attende pas que l'utilisateur ait saisi une touche
 
+    cout << EFFACER_TERMINAL;
+
     cout << endl;
     Terrain t;
     initialiseTerrain(t);
     afficheTerrain(t);
 
     bool mouvement_automatique = false;
-
     char c;
 
     while (true) {
@@ -215,8 +215,9 @@ int main() {
                 } else if (c == 'P') {
                     mouvement_automatique = false;
                 } else {
-                    cout << "\x1B[1mAppuyer sur C pour quitter\x1B[0m | P : désactiver le mode automatique" << endl;
-                    usleep(75000);
+                    cout << CC_POLICE_GRAS << MSG_KEYS "  " CC_POLICE_GRAS "P" CC_RESET " NORMAL" << CC_POLICE_NORMAL;// << endl;
+                //    usleep(75000);
+                    usleep(55000);
                     mouvementTermites(t);
                     afficheTerrain(t);
                 }
@@ -224,8 +225,7 @@ int main() {
 
         } else { // ...mouvement non automatique
             do {
-                cout << "\x1B[1mAppuyer sur C pour quitter\x1B[0m | Entrée : avancer ; Q...J : avance rapide ; P : mode auto | "
-                     << "Entrer commande : ";
+                cout << CC_POLICE_GRAS << MSG_KEYS "  " CC_POLICE_GRAS "P" CC_RESET " AUTO  " << CC_POLICE_NORMAL;
                 int nb_passes = 1;
                 while (true) {
                     c = toupper(getchar()); // On obtient la touche saisie par l'utilisateur...
@@ -266,7 +266,9 @@ int main() {
                     mouvementTermites(t); // on continue l'animation
                 }
                 afficheTerrain(t);
-                usleep(25000); // on attend 25ms pour que l'animation soit fluide et pour éviter que le terminal freeze
+             //   usleep(25000); // on attend 25ms pour que l'animation soit fluide et pour éviter que le terminal freeze
+                                                               // avec CURSEUR_DEBUT au lieu de EFFACER_TERMINAL on peut attendre moins :
+             //   usleep(25000); // on attend 10ms pour que l'animation soit fluide et pour éviter que le terminal freeze
                 while (getchar() != EOF) {} // on supprime les touches pressées pendant le temps d'attente
 
             } while (!mouvement_automatique);

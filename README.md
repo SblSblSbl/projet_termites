@@ -1,7 +1,7 @@
 # Projet Termites
 
-##\> Code dans termites.cpp
+##\> Code principal dans projet_termites.cpp
+##\> Code lié aux termites dans termite.cpp
+##\> Code commun aux 2 fichiers (par ex les constantes et le struct Coord) dans projet_termites_common.cpp
 
-##\> Commentaires dans termites.h
-
-###(pour l'instant)
+##\> Commentaires dans les headers (fichers .h)

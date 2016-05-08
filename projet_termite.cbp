@@ -33,10 +33,14 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="s91k2048_outils_terminal.cpp" />
-		<Unit filename="termites.cpp" />
+		<Unit filename="projet_termites_common.cpp" />
+		<Unit filename="termite.cpp" />
+		<Unit filename="projet_termites.cpp" />
 		<Unit filename="s91k2048_const.h" />
 		<Unit filename="s91k2048_outils_terminal.h" />
-		<Unit filename="termites.h" />
+		<Unit filename="projet_termites_common.h" />
+		<Unit filename="termite.h" />
+		<Unit filename="projet_termites.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

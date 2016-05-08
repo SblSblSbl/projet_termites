@@ -7,11 +7,8 @@ using namespace std;
 bool definirModeTerminal(int not_canon) {
     // active / désactive le mode non canonique
     int fileno_stdin = fileno(stdin);
-    int is_tty = isatty(fileno_stdin);
     struct termios ttystate;
-    if (is_tty && tcgetattr(fileno_stdin, &ttystate) < 0) {
-        return false;
-    }
+    int is_tty = tcgetattr(fileno_stdin, &ttystate) == 0;
     //  ~ICANON : pas de saut de ligne obligatoire (1)
     //    ~ECHO : pas d'affichage des caractères
     int params = (ICANON | ECHO);

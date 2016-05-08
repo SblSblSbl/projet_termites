@@ -77,6 +77,7 @@ void initialiseTerrain(Terrain &t) {
 }
 
 void afficheTerrain(Terrain t) {
+    cout << CLEAR_TERMINAL;
     for (int y = 0; y < TAILLE; y++) {
         cout << "\x1B[1m"; // gras
         if (y) cout << endl;

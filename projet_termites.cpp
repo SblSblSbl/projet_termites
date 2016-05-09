@@ -66,12 +66,10 @@ void initialiseTerrain(Terrain &t) {
                 t.places[y][x] = p;
                 t.termites[p.indtermite] = creerTermite(p.indtermite, x, y);
                 t.nbtermites++;
+            } else if (aleatoire(POURCENTAGE_BRINDILLES/100.)) {
+                t.places[y][x].type = PLACE_TYPE_BRINDILLE;
             } else {
-                if (aleatoire(POURCENTAGE_BRINDILLES/100)) {
-                    t.places[y][x].type = PLACE_TYPE_BRINDILLE;
-                } else {
-                    t.places[y][x].type = PLACE_TYPE_VIDE;
-                }
+                t.places[y][x].type = PLACE_TYPE_VIDE;
             }
         }
     }
@@ -178,7 +176,7 @@ void rassemblerBrindilles(Terrain &t, Termite &m) {
             definirSensRotationTermite(m, sensRotationAleatoire());
             tourneTermite(m);
         } else { // ...sinon, la place existe,
-            actionPlaceTermite(t, m, coord); // et le termite agir selon son type
+            actionPlaceTermite(t, m, coord); // et le termite va agir selon son type
         }
     }
 }
